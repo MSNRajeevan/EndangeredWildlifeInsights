@@ -1,0 +1,1005 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/1598/1598196.png" type="image/x-icon">
+    <title>Endangered Wildlife Insights</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        p {
+            color: #718096;
+        }
+
+
+        .intro-text {
+            color: #ffffff; /* White text for readability */
+            padding: 20px; /* Padding for spacing inside the div */
+            margin-top: 20px; /* Margin to separate from the image */
+            font-family: Arial, sans-serif; /* Consistent font with the rest of the site */
+            line-height: 1.6; /* Line height for better readability */
+            max-width: 80%; /* Limiting the width for better readability */
+            margin-left: auto; /* Centering the block */
+            margin-right: auto;
+            border-radius: 10px; /* Optional: for rounded corners */
+            text-align: center;
+        }
+
+        .chart-container {
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #lineChart {
+            width: 70%;
+            max-width: 600px;
+            max-height: 400px;
+            margin: auto;
+        }
+
+        #speciesType, #categorySelectors {
+            margin-bottom: 20px;
+        }
+
+            #categorySelectors label {
+                margin-right: 10px;
+                display: inline-block;
+                margin-top: 5px;
+            }
+
+        #chartContainer {
+            text-align: center;
+        }
+
+        #classSelector {
+            background-color: #f2f2f2;
+            color: #333;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            #classSelector {
+                padding: 5px 10px;
+            }
+        }
+
+        footer {
+            background-color: #1a1a1a; /* Darker shade for the footer */
+            color: #ffffff; /* White text for contrast */
+            text-align: center; /* Centering the content */
+            padding: 20px 0; /* Top and bottom padding */
+            margin-top: 40px; /* Space between the main content and the footer */
+        }
+
+            footer p {
+                margin: 0;
+                font-weight: bold;
+            }
+
+            footer ul {
+                list-style: none; /* Remove default list styling */
+                padding: 0;
+                margin: 0;
+            }
+
+            footer li {
+                margin: 5px 0; /* Space between names */
+            }
+
+        .disclaimer {
+            color: #cccccc; /* Lighter text color for the disclaimer */
+            font-size: 0.8em; /* Smaller font size */
+            margin-top: 20px; /* Space above the disclaimer */
+            max-width: 80%; /* Limiting the width for better readability */
+            margin-left: auto; /* Centering the disclaimer */
+            margin-right: auto;
+        }
+
+        .credits {
+            color: #cccccc; /* Lighter text color for the credits */
+            font-size: 0.8em; /* Smaller font size */
+            margin-top: 10px; /* Space above the credits */
+        }
+
+            .credits a {
+                color: #4da6ff; /* Color for the link */
+                text-decoration: none; /* Optional: Remove underline from the link */
+            }
+
+                .credits a:hover {
+                    text-decoration: underline; /* Optional: Underline on hover for better usability */
+                }
+
+        .image-credit {
+            font-size: 0.8em; /* Smaller font size for the credit line */
+            color: #cccccc; /* Light grey color for the text */
+            text-align: center; /* Center align the text */
+            margin-top: 5px; /* Small margin from the image */
+        }
+    </style>
+    <!-- Link to Chart.js and D3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <header>
+        <h2>INST 760 Data Visualization</h2>
+        <h1>Endangered Wildlife Insights</h1>
+    </header>
+
+    <div class="chart-container">
+        <img src="https://images.unsplash.com/photo-1541414779316-956a5084c0d4?q=80&w=2007&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image of a Rhino" style="width:100%; height:auto; display: block; margin-left: auto; margin-right: auto;">
+        <p class="image-credit">Photo by Geranimo on <a href="https://unsplash.com/" target="_blank">Unsplash</a></p>
+    </div>
+    <div class="intro-text">
+        <h3>Introduction</h3>
+        <p>In the midst of growing concerns about a potential sixth mass extinction, the urgency for public awareness and understanding of wildlife conservation trends has never been more critical. The earth is currently experiencing unprecedented rates of species decline and habitat loss, a situation that many scientists and environmentalists are likening to past mass extinction events. This alarming scenario underscores the necessity for collective awareness and action.</p>
+
+        <p>It is crucial for us, as members of the global community, to not only recognize the gravity of this situation but also to actively engage with the information and data pertaining to wildlife conservation. By gaining a deeper insight into the current state of wildlife populations, their threats, and the efforts being made to protect them, we can begin to comprehend the scale and scope of the challenges we face. This understanding is the first step towards fostering a more informed and conscientious society, one that is capable of taking decisive actions to address these critical environmental issues.</p>
+
+        <p>Our planet's rich biodiversity is not just an ecological treasure but also a vital component of our own survival and well-being. The loss of species and habitats poses significant risks, not only to the natural world but also to human health, economies, and societies at large. Therefore, making efforts to understand and engage with wildlife conservation is not just an act of environmental stewardship; it is an imperative for ensuring a sustainable and prosperous future for all.</p>
+
+        <p>Through this website, we aim to provide a comprehensive and accessible overview of the current trends in wildlife conservation. By presenting data, research, and insights in a clear and engaging manner, we hope to enlighten and inspire individuals to recognize the importance of this issue. Together, with increased awareness and collective action, we can contribute to reversing these alarming trends and safeguarding the future of our planet's incredible biodiversity.</p>
+    </div>
+    <div class="chart-container">
+        <img src="https://images.unsplash.com/photo-1642402828087-007d2a866099?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image of a Snake" style="width:100%; height:auto; display: block; margin-left: auto; margin-right: auto;">
+        <p class="image-credit">Photo by Rajeevan MSN on <a href="https://unsplash.com/" target="_blank">Unsplash</a></p>
+    </div>
+    <div>
+        <div class="intro-text">
+            <h3>Trends in Species Assessments: A Radial Overview</h3>
+            <p>This radial chart provides a comprehensive visualization of the evolving trends in species assessments over the years.</p>
+            <h4>How to Read:</h4>
+            <p>When you hover over any data point in this chart, a tooltip will appear, providing the precise count of species across all genera assessed in that specific year. This interactive feature allows for an in-depth understanding of the annual species assessment data. </p>
+        </div>
+        <div id="totalAssessedRadialChartDiv" class="chart-container"> <canvas id="totalAssessedRadialChart" width="50" height="50"></canvas></div>
+        <p style="text-align:center;">As it is clearly visible that the number of species that are being assessed is increasing every year.</p>
+    </div>
+    <div>
+        <div class="intro-text">
+            <h3> Red List Category Trends: All Species-Wide Radial Chart </h3>
+            <p>This radial chart offers a detailed visual representation of the changing patterns across various red list categories, encompassing a broad range of species. It effectively illustrates the progression and fluctuations within these categories, shedding light on the critical conservation statuses of diverse species.</p>
+            <h4>How to Read:</h4>
+            <p>The filter option to selectively include or exclude particular red list categories in the visualization. Clicking on the filter will remove the particular red list category from the visualization. By hovering over any data point on the chart, a tooltip will be displayed, revealing the exact count of species within all genera for each red list category in the selected year.</p>
+        </div>
+        <div id="radialChartDiv" class="chart-container"> <canvas id="radialChart" width="50" height="50"> </canvas> </div>
+    </div>
+    <div class="chart-container">
+        <img src="https://images.unsplash.com/photo-1511632271790-65247e635cce?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Image of a Crocodile" style="width:100%; height:auto; display: block; margin-left: auto; margin-right: auto;">
+        <p class="image-credit">Photo by Rajeevan MSN on <a href="https://unsplash.com/" target="_blank">Unsplash</a></p>
+    </div>
+    <div>
+        <div class="intro-text">
+            <h3>Genus-Wise Subspecies Counts in Red List Categories: A Dynamic Line Chart</h3>
+            <p>This line chart dynamically displays the count of subspecies within various red list categories, categorized by genus type.</p> 
+            <h4>How to Read:</h4>
+            <p>An interactive dropdown allows users to select and filter by genus, offering a tailored view of the data. Additionally, the filter option enables users to include or exclude specific red list categories from the visualization, providing a customized and detailed exploration of the data.</p>
+        </div>
+        <div id="lineChartDiv" class="chart-container">
+            <select id="classSelector" style="float:inline-end;">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+            <canvas id="lineChart" width="50" height="50"></canvas>
+        </div>
+    </div>
+    <footer>
+        <p>Team Members:</p>
+        <ul>
+            <li>Rajeevan Madabushi</li>
+            <li>Ritika Namilikonda</li>
+            <li>Scott Mobarry</li>
+        </ul>
+        <p class="disclaimer">Disclaimer: This website is a part of a graduate-level project for a data visualization course. It is intended for educational purposes only and not for commercial use or decision-making.</p>
+        <p class="credits">
+            Data Source: <a href="https://www.iucnredlist.org/" target="_blank">IUCN Red List of Threatened Species</a>
+        </p>
+    </footer>
+
+    <script>
+        // Combined JavaScript from all three files goes here
+        var jsonDataRadialChart = [
+            { "Year": 2002, "Metric": "Critically Endangered", "Total Species": 1978 },
+            { "Year": 2002, "Metric": "Endangered", "Total Species": 2646 },
+            { "Year": 2002, "Metric": "Total Assessed", "Total Species": 16697 },
+            { "Year": 2002, "Metric": "Total Threatened", "Total Species": 11167 },
+            { "Year": 2002, "Metric": "Vulnerable", "Total Species": 6543 },
+            { "Year": 2003, "Metric": "Critically Endangered", "Total Species": 2249 },
+            { "Year": 2003, "Metric": "Endangered", "Total Species": 2999 },
+            { "Year": 2003, "Metric": "Total Assessed", "Total Species": 22424 },
+            { "Year": 2003, "Metric": "Total Threatened", "Total Species": 12259 },
+            { "Year": 2003, "Metric": "Vulnerable", "Total Species": 7011 },
+            { "Year": 2004, "Metric": "Critically Endangered", "Total Species": 2853 },
+            { "Year": 2004, "Metric": "Endangered", "Total Species": 4328 },
+            { "Year": 2004, "Metric": "Total Assessed", "Total Species": 38046 },
+            { "Year": 2004, "Metric": "Total Threatened", "Total Species": 15503 },
+            { "Year": 2004, "Metric": "Vulnerable", "Total Species": 8322 },
+            { "Year": 2006, "Metric": "Critically Endangered", "Total Species": 3071 },
+            { "Year": 2006, "Metric": "Endangered", "Total Species": 4481 },
+            { "Year": 2006, "Metric": "Total Assessed", "Total Species": 40174 },
+            { "Year": 2006, "Metric": "Total Threatened", "Total Species": 16116 },
+            { "Year": 2006, "Metric": "Vulnerable", "Total Species": 8564 },
+            { "Year": 2007, "Metric": "Critically Endangered", "Total Species": 3120 },
+            { "Year": 2007, "Metric": "Endangered", "Total Species": 4563 },
+            { "Year": 2007, "Metric": "Total Assessed", "Total Species": 41415 },
+            { "Year": 2007, "Metric": "Total Threatened", "Total Species": 16300 },
+            { "Year": 2007, "Metric": "Vulnerable", "Total Species": 8617 },
+            { "Year": 2008, "Metric": "Critically Endangered", "Total Species": 3242 },
+            { "Year": 2008, "Metric": "Endangered", "Total Species": 4769 },
+            { "Year": 2008, "Metric": "Total Assessed", "Total Species": 44838 },
+            { "Year": 2008, "Metric": "Total Threatened", "Total Species": 16922 },
+            { "Year": 2008, "Metric": "Vulnerable", "Total Species": 8911 },
+            { "Year": 2009, "Metric": "Critically Endangered", "Total Species": 3321 },
+            { "Year": 2009, "Metric": "Endangered", "Total Species": 4890 },
+            { "Year": 2009, "Metric": "Total Assessed", "Total Species": 47677 },
+            { "Year": 2009, "Metric": "Total Threatened", "Total Species": 17285 },
+            { "Year": 2009, "Metric": "Vulnerable", "Total Species": 9074 },
+            { "Year": 2010, "Metric": "Critically Endangered", "Total Species": 3561 },
+            { "Year": 2010, "Metric": "Endangered", "Total Species": 5255 },
+            { "Year": 2010, "Metric": "Total Assessed", "Total Species": 55926 },
+            { "Year": 2010, "Metric": "Total Threatened", "Total Species": 18345 },
+            { "Year": 2010, "Metric": "Vulnerable", "Total Species": 9529 },
+            { "Year": 2011, "Metric": "Critically Endangered", "Total Species": 3875 },
+            { "Year": 2011, "Metric": "Endangered", "Total Species": 5688 },
+            { "Year": 2011, "Metric": "Total Assessed", "Total Species": 61914 },
+            { "Year": 2011, "Metric": "Total Threatened", "Total Species": 19564 },
+            { "Year": 2011, "Metric": "Vulnerable", "Total Species": 10001 },
+            { "Year": 2012, "Metric": "Critically Endangered", "Total Species": 4084 },
+            { "Year": 2012, "Metric": "Endangered", "Total Species": 5918 },
+            { "Year": 2012, "Metric": "Total Assessed", "Total Species": 65518 },
+            { "Year": 2012, "Metric": "Total Threatened", "Total Species": 20213 },
+            { "Year": 2012, "Metric": "Vulnerable", "Total Species": 10211 },
+            { "Year": 2013, "Metric": "Critically Endangered", "Total Species": 4282 },
+            { "Year": 2013, "Metric": "Endangered", "Total Species": 6453 },
+            { "Year": 2013, "Metric": "Total Assessed", "Total Species": 71576 }, { "Year": 2013, "Metric": "Total Threatened", "Total Species": 21280 }, { "Year": 2013, "Metric": "Vulnerable", "Total Species": 10545 }, { "Year": 2014, "Metric": "Critically Endangered", "Total Species": 4631 }, { "Year": 2014, "Metric": "Endangered", "Total Species": 6938 }, { "Year": 2014, "Metric": "Total Assessed", "Total Species": 76199 }, { "Year": 2014, "Metric": "Total Threatened", "Total Species": 22405 }, { "Year": 2014, "Metric": "Vulnerable", "Total Species": 10836 }, { "Year": 2015, "Metric": "Critically Endangered", "Total Species": 4894 }, { "Year": 2015, "Metric": "Endangered", "Total Species": 7322 }, { "Year": 2015, "Metric": "Total Assessed", "Total Species": 79837 }, { "Year": 2015, "Metric": "Total Threatened", "Total Species": 23244 }, { "Year": 2015, "Metric": "Vulnerable", "Total Species": 11028 }, { "Year": 2016, "Metric": "Critically Endangered", "Total Species": 5210 }, { "Year": 2016, "Metric": "Endangered", "Total Species": 7781 }, { "Year": 2016, "Metric": "Total Assessed", "Total Species": 85604 }, { "Year": 2016, "Metric": "Total Threatened", "Total Species": 24307 }, { "Year": 2016, "Metric": "Vulnerable", "Total Species": 11316 }, { "Year": 2017, "Metric": "Critically Endangered", "Total Species": 5583 }, { "Year": 2017, "Metric": "Endangered", "Total Species": 8455 }, { "Year": 2017, "Metric": "Total Assessed", "Total Species": 91523 }, { "Year": 2017, "Metric": "Total Threatened", "Total Species": 25821 }, { "Year": 2017, "Metric": "Vulnerable", "Total Species": 11783 }, { "Year": 2018, "Metric": "Critically Endangered", "Total Species": 5826 }, { "Year": 2018, "Metric": "Endangered", "Total Species": 9032 }, { "Year": 2018, "Metric": "Total Assessed", "Total Species": 96951 }, { "Year": 2018, "Metric": "Total Threatened", "Total Species": 26840 }, { "Year": 2018, "Metric": "Vulnerable", "Total Species": 11982 }, { "Year": 2019, "Metric": "Critically Endangered", "Total Species": 6413 }, { "Year": 2019, "Metric": "Endangered", "Total Species": 10629 }, { "Year": 2019, "Metric": "Total Assessed", "Total Species": 112432 }, { "Year": 2019, "Metric": "Total Threatened", "Total Species": 30178 }, { "Year": 2019, "Metric": "Vulnerable", "Total Species": 13136 }, { "Year": 2020, "Metric": "Critically Endangered", "Total Species": 7762 }, { "Year": 2020, "Metric": "Endangered", "Total Species": 13285 }, { "Year": 2020, "Metric": "Total Assessed", "Total Species": 130578 }, { "Year": 2020, "Metric": "Total Threatened", "Total Species": 35765 }, { "Year": 2020, "Metric": "Vulnerable", "Total Species": 14718 }, { "Year": 2021, "Metric": "Critically Endangered", "Total Species": 8722 }, { "Year": 2021, "Metric": "Endangered", "Total Species": 15403 }, { "Year": 2021, "Metric": "Total Assessed", "Total Species": 142577 }, { "Year": 2021, "Metric": "Total Threatened", "Total Species": 40084 }, { "Year": 2021, "Metric": "Vulnerable", "Total Species": 15959 }, { "Year": 2022, "Metric": "Critically Endangered", "Total Species": 9065 }, { "Year": 2022, "Metric": "Endangered", "Total Species": 16094 }, { "Year": 2022, "Metric": "Total Assessed", "Total Species": 147517 }, { "Year": 2022, "Metric": "Total Threatened", "Total Species": 41459 }, { "Year": 2022, "Metric": "Vulnerable", "Total Species": 16300 }];
+
+        function getCategoryColor(metric) {
+            var colors = {
+                'Critically Endangered': 'rgba(255, 99, 132, 0.2)',
+                'Endangered': 'rgba(54, 162, 235, 0.2)',
+                'Total Threatened': 'rgba(75, 192, 192, 0.2)',
+                'Total Assessed': 'rgba(255, 215, 0, 0.2)',
+                'Vulnerable': 'rgba(153, 102, 255, 0.2)'
+            };
+            return colors[metric] || 'rgba(255, 159, 64, 0.2)';
+        }
+
+
+
+        // Code for Chart 1
+        jsonDataTotalAssessedRadialChart = jsonDataRadialChart.filter(function (entry) {
+            return entry.Metric == "Total Assessed";
+        });
+
+        var years1 = [];
+        var metrics1 = new Set();
+        var dataByMetric1 = {};
+
+        jsonDataTotalAssessedRadialChart.forEach(item => {
+            years1.push(item.Year);
+            metrics1.add(item.Metric);
+
+            if (!dataByMetric1[item.Metric]) {
+                dataByMetric1[item.Metric] = [];
+            }
+            dataByMetric1[item.Metric].push(item['Total Species']);
+        });
+
+        //Removing duplicate years.
+        years1 = years1.filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        });
+
+        var datasets1 = [];
+
+        metrics1.forEach(metric => {
+            datasets1.push({
+                label: metric,
+                data: dataByMetric1[metric],
+                fill: true,
+                backgroundColor: getCategoryColor(metric),
+                borderColor: getCategoryColor(metric),
+                borderWidth: 1
+            });
+        });
+
+        var ctx = document.getElementById('totalAssessedRadialChart').getContext('2d');
+        var totalAssessedRadialChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: years1,
+                datasets: datasets1
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+            }
+        });
+
+
+        // Code for Chart 2
+        jsonDataRadialChartOthers = jsonDataRadialChart.filter(function (entry) {
+            return entry.Metric !== "Total Assessed";
+        });
+        var years2 = [];
+        var metrics2 = new Set();
+        var dataByMetric2 = {};
+
+        jsonDataRadialChartOthers.forEach(item => {
+            years2.push(item.Year);
+            metrics2.add(item.Metric);
+
+            if (!dataByMetric2[item.Metric]) {
+                dataByMetric2[item.Metric] = [];
+            }
+            dataByMetric2[item.Metric].push(item['Total Species']);
+        });
+
+        //Removing duplicate years.
+        years2 = years2.filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        });
+
+        var datasets2 = [];
+
+        metrics2.forEach(metric => {
+            datasets2.push({
+                label: metric,
+                data: dataByMetric2[metric],
+                fill: true,
+                backgroundColor: getCategoryColor(metric),
+                borderColor: getCategoryColor(metric),
+                borderWidth: 1
+            });
+        });
+
+        var ctx = document.getElementById('radialChart').getContext('2d');
+        var radialChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: years2,
+                datasets: datasets2
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+            }
+        });
+
+        // Code for Chart 3
+        const rawData = [
+            { "Year": 2002, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "30" },
+            { "Year": 2003, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "30" },
+            { "Year": 2004, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "413" },
+            { "Year": 2006, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "442" },
+            { "Year": 2007, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "441" },
+            { "Year": 2008, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "475" },
+            { "Year": 2009, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "484" },
+            { "Year": 2010, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "486" },
+            { "Year": 2011, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "498" },
+            { "Year": 2012, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "509" },
+            { "Year": 2013, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "520" },
+            { "Year": 2014, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "518" },
+            { "Year": 2015, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "528" },
+            { "Year": 2016, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "546" },
+            { "Year": 2017, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "552" },
+            { "Year": 2018, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "550" },
+            { "Year": 2019, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "588" },
+            { "Year": 2020, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "650" },
+            { "Year": 2021, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "673" },
+            { "Year": 2022, "Class": "Amphibians", "Metric": "Critically Endangered", "Number of Species": "681" },
+            { "Year": 2002, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "37" },
+            { "Year": 2003, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "37" },
+            { "Year": 2004, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "729" },
+            { "Year": 2006, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "738" },
+            { "Year": 2007, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "737" },
+            { "Year": 2008, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "755" },
+            { "Year": 2009, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "754" },
+            { "Year": 2010, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "758" },
+            { "Year": 2011, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "764" },
+            { "Year": 2012, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "767" },
+            { "Year": 2013, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "783" },
+            { "Year": 2014, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "789" },
+            { "Year": 2015, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "810" },
+            { "Year": 2016, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "852" },
+            { "Year": 2017, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "869" },
+            { "Year": 2018, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "903" },
+            { "Year": 2019, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "964" },
+            { "Year": 2020, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "1036" },
+            { "Year": 2021, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "1085" },
+            { "Year": 2022, "Class": "Amphibians", "Metric": "Endangered", "Number of Species": "1103" },
+            { "Year": 2002, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "263" },
+            { "Year": 2003, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "401" },
+            { "Year": 2004, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "5,743" },
+            { "Year": 2006, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "5,918" },
+            { "Year": 2007, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "5,915" },
+            { "Year": 2008, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,260" },
+            { "Year": 2009, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,285" },
+            { "Year": 2010, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,296" },
+            { "Year": 2011, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,338" },
+            { "Year": 2012, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,374" },
+            { "Year": 2013, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,409" },
+            { "Year": 2014, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,414" },
+            { "Year": 2015, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,460" },
+            { "Year": 2016, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,534" },
+            { "Year": 2017, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,609" },
+            { "Year": 2018, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,722" },
+            { "Year": 2019, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "6,794" },
+            { "Year": 2020, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "7,212" },
+            { "Year": 2021, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "7,296" },
+            { "Year": 2022, "Class": "Amphibians", "Metric": "Total Assessed", "Number of Species": "7,316" },
+            { "Year": 2002, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "157" },
+            { "Year": 2003, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "157" },
+            { "Year": 2004, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1770" },
+            { "Year": 2006, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1811" },
+            { "Year": 2007, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1808" },
+            { "Year": 2008, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1905" },
+            { "Year": 2009, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1895" },
+            { "Year": 2010, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1898" },
+            { "Year": 2011, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1917" },
+            { "Year": 2012, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1933" },
+            { "Year": 2013, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1950" },
+            { "Year": 2014, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1957" },
+            { "Year": 2015, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "1994" },
+            { "Year": 2016, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2068" },
+            { "Year": 2017, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2100" },
+            { "Year": 2018, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2092" },
+            { "Year": 2019, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2200" },
+            { "Year": 2020, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2390" },
+            { "Year": 2021, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2488" },
+            { "Year": 2022, "Class": "Amphibians", "Metric": "Total Threatened", "Number of Species": "2515" },
+            { "Year": 2002, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "90" },
+            { "Year": 2003, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "90" },
+            { "Year": 2004, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "628" },
+            { "Year": 2006, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "631" },
+            { "Year": 2007, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "630" },
+            { "Year": 2008, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "675" },
+            { "Year": 2009, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "657" },
+            { "Year": 2010, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "654" },
+            { "Year": 2011, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "655" },
+            { "Year": 2012, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "657" },
+            { "Year": 2013, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "647" },
+            { "Year": 2014, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "650" },
+            { "Year": 2015, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "656" },
+            { "Year": 2016, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "670" },
+            { "Year": 2017, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "679" },
+            { "Year": 2018, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "639" },
+            { "Year": 2019, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "648" },
+            { "Year": 2020, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "704" },
+            { "Year": 2021, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "730" },
+            { "Year": 2022, "Class": "Amphibians", "Metric": "Vulnerable", "Number of Species": "731" },
+            { "Year": 2002, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "182" },
+            { "Year": 2003, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "182" },
+            { "Year": 2004, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "179" },
+            { "Year": 2006, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "181" },
+            { "Year": 2007, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "189" },
+            { "Year": 2008, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "190" },
+            { "Year": 2009, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "192" },
+            { "Year": 2010, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "190" },
+            { "Year": 2011, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "189" },
+            { "Year": 2012, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "197" },
+            { "Year": 2013, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "198" },
+            { "Year": 2014, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "213" },
+            { "Year": 2015, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "218" },
+            { "Year": 2016, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "225" },
+            { "Year": 2017, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "222" },
+            { "Year": 2018, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "224" },
+            { "Year": 2019, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "225" },
+            { "Year": 2020, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "223" },
+            { "Year": 2021, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "225" },
+            { "Year": 2022, "Class": "Birds", "Metric": "Critically Endangered", "Number of Species": "231" },
+            { "Year": 2002, "Class": "Birds", "Metric": "Endangered", "Number of Species": "326" },
+            { "Year": 2003, "Class": "Birds", "Metric": "Endangered", "Number of Species": "331" },
+            { "Year": 2004, "Class": "Birds", "Metric": "Endangered", "Number of Species": "345" },
+            { "Year": 2006, "Class": "Birds", "Metric": "Endangered", "Number of Species": "351" },
+            { "Year": 2007, "Class": "Birds", "Metric": "Endangered", "Number of Species": "356" },
+            { "Year": 2008, "Class": "Birds", "Metric": "Endangered", "Number of Species": "361" },
+            { "Year": 2009, "Class": "Birds", "Metric": "Endangered", "Number of Species": "362" },
+            { "Year": 2010, "Class": "Birds", "Metric": "Endangered", "Number of Species": "372" },
+            { "Year": 2011, "Class": "Birds", "Metric": "Endangered", "Number of Species": "382" },
+            { "Year": 2012, "Class": "Birds", "Metric": "Endangered", "Number of Species": "389" },
+            { "Year": 2013, "Class": "Birds", "Metric": "Endangered", "Number of Species": "397" },
+            { "Year": 2014, "Class": "Birds", "Metric": "Endangered", "Number of Species": "419" },
+            { "Year": 2015, "Class": "Birds", "Metric": "Endangered", "Number of Species": "416" },
+            { "Year": 2016, "Class": "Birds", "Metric": "Endangered", "Number of Species": "448" },
+            { "Year": 2017, "Class": "Birds", "Metric": "Endangered", "Number of Species": "461" },
+            { "Year": 2018, "Class": "Birds", "Metric": "Endangered", "Number of Species": "469" },
+            { "Year": 2019, "Class": "Birds", "Metric": "Endangered", "Number of Species": "461" },
+            { "Year": 2020, "Class": "Birds", "Metric": "Endangered", "Number of Species": "460" },
+            { "Year": 2021, "Class": "Birds", "Metric": "Endangered", "Number of Species": "447" },
+            { "Year": 2022, "Class": "Birds", "Metric": "Endangered", "Number of Species": "423" },
+            { "Year": 2002, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "2,138" },
+            { "Year": 2003, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "2,139" },
+            { "Year": 2004, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "9,917" },
+            { "Year": 2006, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "9,934" },
+            { "Year": 2007, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "9,956" },
+            { "Year": 2008, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "9,990" },
+            { "Year": 2009, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "9,998" },
+            { "Year": 2010, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,027" },
+            { "Year": 2011, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,052" },
+            { "Year": 2012, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,064" },
+            { "Year": 2013, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,065" },
+            { "Year": 2014, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,425" },
+            { "Year": 2015, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "10,424" },
+            { "Year": 2016, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,121" },
+            { "Year": 2017, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,122" },
+            { "Year": 2018, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,126" },
+            { "Year": 2019, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,147" },
+            { "Year": 2020, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,158" },
+            { "Year": 2021, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,162" },
+            { "Year": 2022, "Class": "Birds", "Metric": "Total Assessed", "Number of Species": "11,162" },
+            { "Year": 2002, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1192" },
+            { "Year": 2003, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1194" },
+            { "Year": 2004, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1212" },
+            { "Year": 2006, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1206" },
+            { "Year": 2007, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1217" },
+            { "Year": 2008, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1222" },
+            { "Year": 2009, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1223" },
+            { "Year": 2010, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1240" },
+            { "Year": 2011, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1253" },
+            { "Year": 2012, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1313" },
+            { "Year": 2013, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1308" },
+            { "Year": 2014, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1373" },
+            { "Year": 2015, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1375" },
+            { "Year": 2016, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1460" },
+            { "Year": 2017, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1469" },
+            { "Year": 2018, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1492" },
+            { "Year": 2019, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1486" },
+            { "Year": 2020, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1481" },
+            { "Year": 2021, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1445" },
+            { "Year": 2022, "Class": "Birds", "Metric": "Total Threatened", "Number of Species": "1409" },
+            { "Year": 2002, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "684" },
+            { "Year": 2003, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "681" },
+            { "Year": 2004, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "688" },
+            { "Year": 2006, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "674" },
+            { "Year": 2007, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "672" },
+            { "Year": 2008, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "671" },
+            { "Year": 2009, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "669" },
+            { "Year": 2010, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "678" },
+            { "Year": 2011, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "682" },
+            { "Year": 2012, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "727" },
+            { "Year": 2013, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "713" },
+            { "Year": 2014, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "741" },
+            { "Year": 2015, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "741" },
+            { "Year": 2016, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "787" },
+            { "Year": 2017, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "786" },
+            { "Year": 2018, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "799" },
+            { "Year": 2019, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "800" },
+            { "Year": 2020, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "798" },
+            { "Year": 2021, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "773" },
+            { "Year": 2022, "Class": "Birds", "Metric": "Vulnerable", "Number of Species": "755" },
+            { "Year": 2002, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "157" },
+            { "Year": 2003, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "162" },
+            { "Year": 2004, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "171" },
+            { "Year": 2006, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "253" },
+            { "Year": 2007, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "254" },
+            { "Year": 2008, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "289" },
+            { "Year": 2009, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "306" },
+            { "Year": 2010, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "376" },
+            { "Year": 2011, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "414" },
+            { "Year": 2012, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "415" },
+            { "Year": 2013, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "413" },
+            { "Year": 2014, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "443" },
+            { "Year": 2015, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "446" },
+            { "Year": 2016, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "461" },
+            { "Year": 2017, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "468" },
+            { "Year": 2018, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "486" },
+            { "Year": 2019, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "592" },
+            { "Year": 2020, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "666" },
+            { "Year": 2021, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "739" },
+            { "Year": 2022, "Class": "Fishes", "Metric": "Critically Endangered", "Number of Species": "800" },
+            { "Year": 2002, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "143" },
+            { "Year": 2003, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "144" },
+            { "Year": 2004, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "160" },
+            { "Year": 2006, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "237" },
+            { "Year": 2007, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "254" },
+            { "Year": 2008, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "269" },
+            { "Year": 2009, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "298" },
+            { "Year": 2010, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "400" },
+            { "Year": 2011, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "477" },
+            { "Year": 2012, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "494" },
+            { "Year": 2013, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "530" },
+            { "Year": 2014, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "587" },
+            { "Year": 2015, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "614" },
+            { "Year": 2016, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "660" },
+            { "Year": 2017, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "676" },
+            { "Year": 2018, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "674" },
+            { "Year": 2019, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "868" },
+            { "Year": 2020, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "1036" },
+            { "Year": 2021, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "1139" },
+            { "Year": 2022, "Class": "Fishes", "Metric": "Endangered", "Number of Species": "1215" },
+            { "Year": 2002, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "1,265" },
+            { "Year": 2003, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "1,532" },
+            { "Year": 2004, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "1,721" },
+            { "Year": 2006, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "2,912" },
+            { "Year": 2007, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "3,119" },
+            { "Year": 2008, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "3,481" },
+            { "Year": 2009, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "4,443" },
+            { "Year": 2010, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "8,848" },
+            { "Year": 2011, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "9,554" },
+            { "Year": 2012, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "10,590" },
+            { "Year": 2013, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "11,172" },
+            { "Year": 2014, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "12,457" },
+            { "Year": 2015, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "14,462" },
+            { "Year": 2016, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "16,134" },
+            { "Year": 2017, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "16,409" },
+            { "Year": 2018, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "16,803" },
+            { "Year": 2019, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "19,199" },
+            { "Year": 2020, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "22,005" },
+            { "Year": 2021, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "22,581" },
+            { "Year": 2022, "Class": "Fishes", "Metric": "Total Assessed", "Number of Species": "24,356" },
+            { "Year": 2002, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "742" },
+            { "Year": 2003, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "750" },
+            { "Year": 2004, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "801" },
+            { "Year": 2006, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "1171" },
+            { "Year": 2007, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "1201" },
+            { "Year": 2008, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "1275" },
+            { "Year": 2009, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "1414" },
+            { "Year": 2010, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "1851" },
+            { "Year": 2011, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2028" },
+            { "Year": 2012, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2058" },
+            { "Year": 2013, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2110" },
+            { "Year": 2014, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2222" },
+            { "Year": 2015, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2271" },
+            { "Year": 2016, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2359" },
+            { "Year": 2017, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2386" },
+            { "Year": 2018, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2332" },
+            { "Year": 2019, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "2674" },
+            { "Year": 2020, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "3040" },
+            { "Year": 2021, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "3332" },
+            { "Year": 2022, "Class": "Fishes", "Metric": "Total Threatened", "Number of Species": "3548" },
+            { "Year": 2002, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "442" },
+            { "Year": 2003, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "444" },
+            { "Year": 2004, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "470" },
+            { "Year": 2006, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "681" },
+            { "Year": 2007, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "693" },
+            { "Year": 2008, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "717" },
+            { "Year": 2009, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "810" },
+            { "Year": 2010, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1075" },
+            { "Year": 2011, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1137" },
+            { "Year": 2012, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1149" },
+            { "Year": 2013, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1167" },
+            { "Year": 2014, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1192" },
+            { "Year": 2015, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1211" },
+            { "Year": 2016, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1238" },
+            { "Year": 2017, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1242" },
+            { "Year": 2018, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1172" },
+            { "Year": 2019, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1214" },
+            { "Year": 2020, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1338" },
+            { "Year": 2021, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1454" },
+            { "Year": 2022, "Class": "Fishes", "Metric": "Vulnerable", "Number of Species": "1533" },
+            { "Year": 2002, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "0" },
+            { "Year": 2003, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "1" },
+            { "Year": 2004, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "1" },
+            { "Year": 2006, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2007, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2008, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2009, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2010, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2011, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2012, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2013, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2014, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "2" },
+            { "Year": 2015, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "5" },
+            { "Year": 2016, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "8" },
+            { "Year": 2017, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "10" },
+            { "Year": 2018, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "14" },
+            { "Year": 2019, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "19" },
+            { "Year": 2020, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "30" },
+            { "Year": 2021, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "32" },
+            { "Year": 2022, "Class": "Fungi & Protists", "Metric": "Critically Endangered", "Number of Species": "36" },
+            { "Year": 2002, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "0" },
+            { "Year": 2003, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2004, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2006, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2007, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2008, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2009, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2010, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2011, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2012, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2013, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2014, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "1" },
+            { "Year": 2015, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "11" },
+            { "Year": 2016, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "12" },
+            { "Year": 2017, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "18" },
+            { "Year": 2018, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "21" },
+            { "Year": 2019, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "60" },
+            { "Year": 2020, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "82" },
+            { "Year": 2021, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "96" },
+            { "Year": 2022, "Class": "Fungi & Protists", "Metric": "Endangered", "Number of Species": "102" },
+            { "Year": 2002, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "0" },
+            { "Year": 2003, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "2" },
+            { "Year": 2004, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "2" },
+            { "Year": 2006, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "3" },
+            { "Year": 2007, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2008, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2009, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2010, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2011, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2012, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2013, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "18" },
+            { "Year": 2014, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "20" },
+            { "Year": 2015, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "49" },
+            { "Year": 2016, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "48" },
+            { "Year": 2017, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "71" },
+            { "Year": 2018, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "81" },
+            { "Year": 2019, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "295" },
+            { "Year": 2020, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "423" },
+            { "Year": 2021, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "565" },
+            { "Year": 2022, "Class": "Fungi & Protists", "Metric": "Total Assessed", "Number of Species": "612" },
+            { "Year": 2002, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "0" },
+            { "Year": 2003, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "2" },
+            { "Year": 2004, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "2" },
+            { "Year": 2006, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2007, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2008, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2009, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2010, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2011, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2012, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2013, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2014, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "3" },
+            { "Year": 2015, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "29" },
+            { "Year": 2016, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "34" },
+            { "Year": 2017, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "49" },
+            { "Year": 2018, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "59" },
+            { "Year": 2019, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "170" },
+            { "Year": 2020, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "239" },
+            { "Year": 2021, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "270" },
+            { "Year": 2022, "Class": "Fungi & Protists", "Metric": "Total Threatened", "Number of Species": "290" },
+            { "Year": 2002, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2003, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2004, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2006, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2007, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2008, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2009, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2010, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2011, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2012, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2013, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2014, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "0" },
+            { "Year": 2015, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "13" },
+            { "Year": 2016, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "14" },
+            { "Year": 2017, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "21" },
+            { "Year": 2018, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "24" },
+            { "Year": 2019, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "91" },
+            { "Year": 2020, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "127" },
+            { "Year": 2021, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "142" },
+            { "Year": 2022, "Class": "Fungi & Protists", "Metric": "Vulnerable", "Number of Species": "152" },
+            { "Year": 2002, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "46" },
+            { "Year": 2003, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "46" },
+            { "Year": 2004, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "47" },
+            { "Year": 2006, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "68" },
+            { "Year": 2007, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "69" },
+            { "Year": 2008, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "70" },
+            { "Year": 2009, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "89" },
+            { "Year": 2010, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "89" },
+            { "Year": 2011, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "91" },
+            { "Year": 2012, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "119" },
+            { "Year": 2013, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "125" },
+            { "Year": 2014, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "168" },
+            { "Year": 2015, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "176" },
+            { "Year": 2016, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "226" },
+            { "Year": 2017, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "273" },
+            { "Year": 2018, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "300" },
+            { "Year": 2019, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "311" },
+            { "Year": 2020, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "347" },
+            { "Year": 2021, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "408" },
+            { "Year": 2022, "Class": "Insects", "Metric": "Critically Endangered", "Number of Species": "412" },
+            { "Year": 2002, "Class": "Insects", "Metric": "Endangered", "Number of Species": "118" },
+            { "Year": 2003, "Class": "Insects", "Metric": "Endangered", "Number of Species": "118" },
+            { "Year": 2004, "Class": "Insects", "Metric": "Endangered", "Number of Species": "120" },
+            { "Year": 2006, "Class": "Insects", "Metric": "Endangered", "Number of Species": "129" },
+            { "Year": 2007, "Class": "Insects", "Metric": "Endangered", "Number of Species": "129" },
+            { "Year": 2008, "Class": "Insects", "Metric": "Endangered", "Number of Species": "132" },
+            { "Year": 2009, "Class": "Insects", "Metric": "Endangered", "Number of Species": "151" },
+            { "Year": 2010, "Class": "Insects", "Metric": "Endangered", "Number of Species": "166" },
+            { "Year": 2011, "Class": "Insects", "Metric": "Endangered", "Number of Species": "169" },
+            { "Year": 2012, "Class": "Insects", "Metric": "Endangered", "Number of Species": "207" },
+            { "Year": 2013, "Class": "Insects", "Metric": "Endangered", "Number of Species": "247" },
+            { "Year": 2014, "Class": "Insects", "Metric": "Endangered", "Number of Species": "270" },
+            { "Year": 2015, "Class": "Insects", "Metric": "Endangered", "Number of Species": "305" },
+            { "Year": 2016, "Class": "Insects", "Metric": "Endangered", "Number of Species": "408" },
+            { "Year": 2017, "Class": "Insects", "Metric": "Endangered", "Number of Species": "461" },
+            { "Year": 2018, "Class": "Insects", "Metric": "Endangered", "Number of Species": "537" },
+            { "Year": 2019, "Class": "Insects", "Metric": "Endangered", "Number of Species": "571" },
+            { "Year": 2020, "Class": "Insects", "Metric": "Endangered", "Number of Species": "690" },
+            { "Year": 2021, "Class": "Insects", "Metric": "Endangered", "Number of Species": "937" },
+            { "Year": 2022, "Class": "Insects", "Metric": "Endangered", "Number of Species": "949" },
+            { "Year": 2002, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "747" },
+            { "Year": 2003, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "768" },
+            { "Year": 2004, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "771" },
+            { "Year": 2006, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "1,192" },
+            { "Year": 2007, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "1,255" },
+            { "Year": 2008, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "1,259" },
+            { "Year": 2009, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "2,619" },
+            { "Year": 2010, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "3,269" },
+            { "Year": 2011, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "3,844" },
+            { "Year": 2012, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "4,003" },
+            { "Year": 2013, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "4,610" },
+            { "Year": 2014, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "5,304" },
+            { "Year": 2015, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "5,573" },
+            { "Year": 2016, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "6,587" },
+            { "Year": 2017, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "7,639" },
+            { "Year": 2018, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "8,037" },
+            { "Year": 2019, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "8,696" },
+            { "Year": 2020, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "10,865" },
+            { "Year": 2021, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "12,100" },
+            { "Year": 2022, "Class": "Insects", "Metric": "Total Assessed", "Number of Species": "12,161" },
+            { "Year": 2002, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "557" },
+            { "Year": 2003, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "553" },
+            { "Year": 2004, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "559" },
+            { "Year": 2006, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "623" },
+            { "Year": 2007, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "623" },
+            { "Year": 2008, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "626" },
+            { "Year": 2009, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "711" },
+            { "Year": 2010, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "733" },
+            { "Year": 2011, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "741" },
+            { "Year": 2012, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "829" },
+            { "Year": 2013, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "896" },
+            { "Year": 2014, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "993" },
+            { "Year": 2015, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1046" },
+            { "Year": 2016, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1268" },
+            { "Year": 2017, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1414" },
+            { "Year": 2018, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1537" },
+            { "Year": 2019, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1647" },
+            { "Year": 2020, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "1848" },
+            { "Year": 2021, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "2270" },
+            { "Year": 2022, "Class": "Insects", "Metric": "Total Threatened", "Number of Species": "2291" },
+            { "Year": 2002, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "393" },
+            { "Year": 2003, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "389" },
+            { "Year": 2004, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "392" },
+            { "Year": 2006, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "426" },
+            { "Year": 2007, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "425" },
+            { "Year": 2008, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "424" },
+            { "Year": 2009, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "471" },
+            { "Year": 2010, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "478" },
+            { "Year": 2011, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "481" },
+            { "Year": 2012, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "503" },
+            { "Year": 2013, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "524" },
+            { "Year": 2014, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "555" },
+            { "Year": 2015, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "565" },
+            { "Year": 2016, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "634" },
+            { "Year": 2017, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "680" },
+            { "Year": 2018, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "700" },
+            { "Year": 2019, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "765" },
+            { "Year": 2020, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "811" },
+            { "Year": 2021, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "925" },
+            { "Year": 2022, "Class": "Insects", "Metric": "Vulnerable", "Number of Species": "930" },
+            { "Year": 2002, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "181" },
+            { "Year": 2003, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "184" },
+            { "Year": 2004, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "162" },
+            { "Year": 2006, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "162" },
+            { "Year": 2007, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "163" },
+            { "Year": 2008, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "188" },
+            { "Year": 2009, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "188" },
+            { "Year": 2010, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "188" },
+            { "Year": 2011, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "194" },
+            { "Year": 2012, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "196" }, { "Year": 2013, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "196" }, { "Year": 2014, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "213" }, { "Year": 2015, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "209" }, { "Year": 2016, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "204" }, { "Year": 2017, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "202" }, { "Year": 2018, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "201" }, { "Year": 2019, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "203" }, { "Year": 2020, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "221" }, { "Year": 2021, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "229" }, { "Year": 2022, "Class": "Mammals", "Metric": "Critically Endangered", "Number of Species": "232" }, { "Year": 2002, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "339" }, { "Year": 2003, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "337" }, { "Year": 2004, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "352" }, { "Year": 2006, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "348" }, { "Year": 2007, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "349" }, { "Year": 2008, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "448" }, { "Year": 2009, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "449" }, { "Year": 2010, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "450" }, { "Year": 2011, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "447" }, { "Year": 2012, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "446" }, { "Year": 2013, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "447" }, { "Year": 2014, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "477" }, { "Year": 2015, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "481" }, { "Year": 2016, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "464" }, { "Year": 2017, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "476" }, { "Year": 2018, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "482" }, { "Year": 2019, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "505" }, { "Year": 2020, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "539" }, { "Year": 2021, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "547" }, { "Year": 2022, "Class": "Mammals", "Metric": "Endangered", "Number of Species": "549" }, { "Year": 2002, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "2,150" }, { "Year": 2003, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "4,789" }, { "Year": 2004, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "4,853" }, { "Year": 2006, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "4,864" }, { "Year": 2007, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "4,863" }, { "Year": 2008, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,488" }, { "Year": 2009, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,490" }, { "Year": 2010, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,491" }, { "Year": 2011, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,499" }, { "Year": 2012, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,501" }, { "Year": 2013, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,506" }, { "Year": 2014, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,513" }, { "Year": 2015, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,502" }, { "Year": 2016, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,567" }, { "Year": 2017, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,674" }, { "Year": 2018, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,692" }, { "Year": 2019, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,850" }, { "Year": 2020, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,940" }, { "Year": 2021, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,968" }, { "Year": 2022, "Class": "Mammals", "Metric": "Total Assessed", "Number of Species": "5,969" }, { "Year": 2002, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1137" }, { "Year": 2003, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1130" }, { "Year": 2004, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1101" }, { "Year": 2006, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1093" }, { "Year": 2007, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1094" }, { "Year": 2008, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1141" }, { "Year": 2009, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1142" }, { "Year": 2010, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1131" }, { "Year": 2011, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1138" }, { "Year": 2012, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1139" }, { "Year": 2013, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1143" }, { "Year": 2014, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1199" }, { "Year": 2015, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1197" }, { "Year": 2016, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1194" }, { "Year": 2017, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1204" }, { "Year": 2018, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1219" }, { "Year": 2019, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1244" }, { "Year": 2020, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1317" }, { "Year": 2021, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1333" }, { "Year": 2022, "Class": "Mammals", "Metric": "Total Threatened", "Number of Species": "1337" }, { "Year": 2002, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "617" }, { "Year": 2003, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "609" }, { "Year": 2004, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "587" }, { "Year": 2006, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "583" }, { "Year": 2007, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "582" }, { "Year": 2008, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "505" }, { "Year": 2009, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "505" }, { "Year": 2010, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "493" }, { "Year": 2011, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "497" }, { "Year": 2012, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "497" }, { "Year": 2013, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "500" }, { "Year": 2014, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "509" }, { "Year": 2015, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "507" }, { "Year": 2016, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "526" }, { "Year": 2017, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "526" }, { "Year": 2018, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "536" }, { "Year": 2019, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "536" }, { "Year": 2020, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "557" }, { "Year": 2021, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "557" }, { "Year": 2022, "Class": "Mammals", "Metric": "Vulnerable", "Number of Species": "556" }, { "Year": 2002, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "222" }, { "Year": 2003, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "250" }, { "Year": 2004, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "265" }, { "Year": 2006, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "265" }, { "Year": 2007, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "268" }, { "Year": 2008, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "268" }, { "Year": 2009, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "291" }, { "Year": 2010, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "373" }, { "Year": 2011, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "487" }, { "Year": 2012, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "549" }, { "Year": 2013, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "553" }, { "Year": 2014, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "576" }, { "Year": 2015, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "576" }, { "Year": 2016, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "586" }, { "Year": 2017, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "625" }, { "Year": 2018, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "633" }, { "Year": 2019, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "667" }, { "Year": 2020, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "682" }, { "Year": 2021, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "717" }, { "Year": 2022, "Class": "Molluscs", "Metric": "Critically Endangered", "Number of Species": "717" }, { "Year": 2002, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "236" }, { "Year": 2003, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "243" }, { "Year": 2004, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "221" }, { "Year": 2006, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "222" }, { "Year": 2007, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "224" }, { "Year": 2008, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "224" }, { "Year": 2009, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "245" }, { "Year": 2010, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "328" }, { "Year": 2011, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "417" }, { "Year": 2012, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "480" }, { "Year": 2013, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "486" }, { "Year": 2014, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "501" }, { "Year": 2015, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "503" }, { "Year": 2016, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "513" }, { "Year": 2017, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "547" }, { "Year": 2018, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "546" }, { "Year": 2019, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "564" }, { "Year": 2020, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "586" }, { "Year": 2021, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "599" }, { "Year": 2022, "Class": "Molluscs", "Metric": "Endangered", "Number of Species": "599" }, { "Year": 2002, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,018" }, { "Year": 2003, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,098" }, { "Year": 2004, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,163" }, { "Year": 2006, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,163" }, { "Year": 2007, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,212" }, { "Year": 2008, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,212" }, { "Year": 2009, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "2,306" }, { "Year": 2010, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "3,149" }, { "Year": 2011, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "5,422" }, { "Year": 2012, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "6,183" }, { "Year": 2013, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "6,809" }, { "Year": 2014, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "7,217" }, { "Year": 2015, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "7,216" }, { "Year": 2016, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "7,276" }, { "Year": 2017, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "8,413" }, { "Year": 2018, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "8,627" }, { "Year": 2019, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "8,749" }, { "Year": 2020, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "8,847" }, { "Year": 2021, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "9,019" }, { "Year": 2022, "Class": "Molluscs", "Metric": "Total Assessed", "Number of Species": "9,017" }, { "Year": 2002, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "939" }, { "Year": 2003, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "967" }, { "Year": 2004, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "974" }, { "Year": 2006, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "975" }, { "Year": 2007, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "978" }, { "Year": 2008, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "978" }, { "Year": 2009, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1036" }, { "Year": 2010, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1288" }, { "Year": 2011, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1673" }, { "Year": 2012, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1857" }, { "Year": 2013, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1898" }, { "Year": 2014, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1950" }, { "Year": 2015, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1950" }, { "Year": 2016, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "1984" }, { "Year": 2017, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2187" }, { "Year": 2018, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2195" }, { "Year": 2019, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2250" }, { "Year": 2020, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2300" }, { "Year": 2021, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2385" }, { "Year": 2022, "Class": "Molluscs", "Metric": "Total Threatened", "Number of Species": "2384" }, { "Year": 2002, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "481" }, { "Year": 2003, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "474" }, { "Year": 2004, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "488" }, { "Year": 2006, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "488" }, { "Year": 2007, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "486" }, { "Year": 2008, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "486" }, { "Year": 2009, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "500" }, { "Year": 2010, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "587" }, { "Year": 2011, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "769" }, { "Year": 2012, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "828" }, { "Year": 2013, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "859" }, { "Year": 2014, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "873" }, { "Year": 2015, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "871" }, { "Year": 2016, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "885" }, { "Year": 2017, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1015" }, { "Year": 2018, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1016" }, { "Year": 2019, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1019" }, { "Year": 2020, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1032" }, { "Year": 2021, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1069" }, { "Year": 2022, "Class": "Molluscs", "Metric": "Vulnerable", "Number of Species": "1068" }, { "Year": 2002, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "59" }, { "Year": 2003, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "61" }, { "Year": 2004, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "61" }, { "Year": 2006, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "84" }, { "Year": 2007, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "86" }, { "Year": 2008, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "99" }, { "Year": 2009, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "99" }, { "Year": 2010, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "132" }, { "Year": 2011, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "132" }, { "Year": 2012, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "132" }, { "Year": 2013, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "154" }, { "Year": 2014, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "205" }, { "Year": 2015, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "209" }, { "Year": 2016, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "211" }, { "Year": 2017, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "243" }, { "Year": 2018, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "252" }, { "Year": 2019, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "270" }, { "Year": 2020, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "282" }, { "Year": 2021, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "290" }, { "Year": 2022, "Class": "Other Invertebrates", "Metric": "Critically Endangered", "Number of Species": "291" }, { "Year": 2002, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "77" }, { "Year": 2003, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "76" }, { "Year": 2004, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "82" }, { "Year": 2006, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "96" }, { "Year": 2007, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "96" }, { "Year": 2008, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "165" }, { "Year": 2009, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "164" }, { "Year": 2010, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "183" }, { "Year": 2011, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "183" }, { "Year": 2012, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "183" }, { "Year": 2013, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "224" }, { "Year": 2014, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "307" }, { "Year": 2015, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "311" }, { "Year": 2016, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "312" }, { "Year": 2017, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "340" }, { "Year": 2018, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "348" }, { "Year": 2019, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "344" }, { "Year": 2020, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "347" }, { "Year": 2021, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "370" }, { "Year": 2022, "Class": "Other Invertebrates", "Metric": "Endangered", "Number of Species": "371" }, { "Year": 2002, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "513" }, { "Year": 2003, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "516" }, { "Year": 2004, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "553" }, { "Year": 2006, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "623" }, { "Year": 2007, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "649" }, { "Year": 2008, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "2,690" }, { "Year": 2009, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "2,690" }, { "Year": 2010, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "3,108" }, { "Year": 2011, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "3,355" }, { "Year": 2012, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "3,356" }, { "Year": 2013, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "4,492" }, { "Year": 2014, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "4,697" }, { "Year": 2015, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "4,727" }, { "Year": 2016, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "4,746" }, { "Year": 2017, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,078" }, { "Year": 2018, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,222" }, { "Year": 2019, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,243" }, { "Year": 2020, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,267" }, { "Year": 2021, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,395" }, { "Year": 2022, "Class": "Other Invertebrates", "Metric": "Total Assessed", "Number of Species": "5,403" }, { "Year": 2002, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "436" }, { "Year": 2003, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "439" }, { "Year": 2004, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "459" }, { "Year": 2006, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "503" }, { "Year": 2007, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "507" }, { "Year": 2008, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "892" }, { "Year": 2009, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "892" }, { "Year": 2010, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "883" }, { "Year": 2011, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "883" }, { "Year": 2012, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "884" }, { "Year": 2013, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1028" }, { "Year": 2014, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1197" }, { "Year": 2015, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1205" }, { "Year": 2016, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1218" }, { "Year": 2017, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1292" }, { "Year": 2018, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1308" }, { "Year": 2019, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1324" }, { "Year": 2020, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1341" }, { "Year": 2021, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1387" }, { "Year": 2022, "Class": "Other Invertebrates", "Metric": "Total Threatened", "Number of Species": "1391" }, { "Year": 2002, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "300" }, { "Year": 2003, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "302" }, { "Year": 2004, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "316" }, { "Year": 2006, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "323" }, { "Year": 2007, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "325" }, { "Year": 2008, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "628" }, { "Year": 2009, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "629" }, { "Year": 2010, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "568" }, { "Year": 2011, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "568" }, { "Year": 2012, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "569" }, { "Year": 2013, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "650" }, { "Year": 2014, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "685" }, { "Year": 2015, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "685" }, { "Year": 2016, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "695" }, { "Year": 2017, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "709" }, { "Year": 2018, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "708" }, { "Year": 2019, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "710" }, { "Year": 2020, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "712" }, { "Year": 2021, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "727" }, { "Year": 2022, "Class": "Other Invertebrates", "Metric": "Vulnerable", "Number of Species": "729" }, { "Year": 2002, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1046" }, { "Year": 2003, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1276" }, { "Year": 2004, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1490" }, { "Year": 2006, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1541" }, { "Year": 2007, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1569" }, { "Year": 2008, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1575" }, { "Year": 2009, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1577" }, { "Year": 2010, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1619" }, { "Year": 2011, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1731" }, { "Year": 2012, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1821" }, { "Year": 2013, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "1957" }, { "Year": 2014, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "2119" }, { "Year": 2015, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "2347" }, { "Year": 2016, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "2506" }, { "Year": 2017, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "2722" }, { "Year": 2018, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "2879" }, { "Year": 2019, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "3229" }, { "Year": 2020, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "4337" }, { "Year": 2021, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "4976" }, { "Year": 2022, "Class": "Plants", "Metric": "Critically Endangered", "Number of Species": "5232" }, { "Year": 2002, "Class": "Plants", "Metric": "Endangered", "Number of Species": "1291" }, { "Year": 2003, "Class": "Plants", "Metric": "Endangered", "Number of Species": "1634" }, { "Year": 2004, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2239" }, { "Year": 2006, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2258" }, { "Year": 2007, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2278" }, { "Year": 2008, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2280" }, { "Year": 2009, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2316" }, { "Year": 2010, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2397" }, { "Year": 2011, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2564" }, { "Year": 2012, "Class": "Plants", "Metric": "Endangered", "Number of Species": "2655" }, { "Year": 2013, "Class": "Plants", "Metric": "Endangered", "Number of Species": "3009" }, { "Year": 2014, "Class": "Plants", "Metric": "Endangered", "Number of Species": "3231" }, { "Year": 2015, "Class": "Plants", "Metric": "Endangered", "Number of Species": "3510" }, { "Year": 2016, "Class": "Plants", "Metric": "Endangered", "Number of Species": "3691" }, { "Year": 2017, "Class": "Plants", "Metric": "Endangered", "Number of Species": "4123" }, { "Year": 2018, "Class": "Plants", "Metric": "Endangered", "Number of Species": "4537" }, { "Year": 2019, "Class": "Plants", "Metric": "Endangered", "Number of Species": "5727" }, { "Year": 2020, "Class": "Plants", "Metric": "Endangered", "Number of Species": "7925" }, { "Year": 2021, "Class": "Plants", "Metric": "Endangered", "Number of Species": "9400" }, { "Year": 2022, "Class": "Plants", "Metric": "Endangered", "Number of Species": "9996" }, { "Year": 2002, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "7,150" }, { "Year": 2003, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "9,706" }, { "Year": 2004, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "11,824" }, { "Year": 2006, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "11,901" }, { "Year": 2007, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "12,043" }, { "Year": 2008, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "12,055" }, { "Year": 2009, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "12,151" }, { "Year": 2010, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "12,914" }, { "Year": 2011, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "14,496" }, { "Year": 2012, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "15,674" }, { "Year": 2013, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "18,291" }, { "Year": 2014, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "19,738" }, { "Year": 2015, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "20,755" }, { "Year": 2016, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "22,253" }, { "Year": 2017, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "24,230" }, { "Year": 2018, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "27,514" }, { "Year": 2019, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "38,630" }, { "Year": 2020, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "50,369" }, { "Year": 2021, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "58,343" }, { "Year": 2022, "Class": "Plants", "Metric": "Total Assessed", "Number of Species": "61,371" }, { "Year": 2002, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "5714" }, { "Year": 2003, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "6774" }, { "Year": 2004, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8321" }, { "Year": 2006, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8390" }, { "Year": 2007, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8447" }, { "Year": 2008, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8457" }, { "Year": 2009, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8500" }, { "Year": 2010, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "8724" }, { "Year": 2011, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "9156" }, { "Year": 2012, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "9390" }, { "Year": 2013, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "10065" }, { "Year": 2014, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "10584" }, { "Year": 2015, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "11233" }, { "Year": 2016, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "11643" }, { "Year": 2017, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "12505" }, { "Year": 2018, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "13299" }, { "Year": 2019, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "15774" }, { "Year": 2020, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "20360" }, { "Year": 2021, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "23335" }, { "Year": 2022, "Class": "Plants", "Metric": "Total Threatened", "Number of Species": "24449" }, { "Year": 2002, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "3377" }, { "Year": 2003, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "3864" }, { "Year": 2004, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4592" }, { "Year": 2006, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4591" }, { "Year": 2007, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4600" }, { "Year": 2008, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4602" }, { "Year": 2009, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4607" }, { "Year": 2010, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4708" }, { "Year": 2011, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4861" }, { "Year": 2012, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "4914" }, { "Year": 2013, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5099" }, { "Year": 2014, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5234" }, { "Year": 2015, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5376" }, { "Year": 2016, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5446" }, { "Year": 2017, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5660" }, { "Year": 2018, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "5883" }, { "Year": 2019, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "6818" }, { "Year": 2020, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "8098" }, { "Year": 2021, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "8959" }, { "Year": 2022, "Class": "Plants", "Metric": "Vulnerable", "Number of Species": "9221" }, { "Year": 2002, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "55" }, { "Year": 2003, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "57" }, { "Year": 2004, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "64" }, { "Year": 2006, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "73" }, { "Year": 2007, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "79" }, { "Year": 2008, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "86" }, { "Year": 2009, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "93" }, { "Year": 2010, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "106" }, { "Year": 2011, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "137" }, { "Year": 2012, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "144" }, { "Year": 2013, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "164" }, { "Year": 2014, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "174" }, { "Year": 2015, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "180" }, { "Year": 2016, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "237" }, { "Year": 2017, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "266" }, { "Year": 2018, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "287" }, { "Year": 2019, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "309" }, { "Year": 2020, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "324" }, { "Year": 2021, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "433" }, { "Year": 2022, "Class": "Reptiles", "Metric": "Critically Endangered", "Number of Species": "433" }, { "Year": 2002, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "79" }, { "Year": 2003, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "78" }, { "Year": 2004, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "79" }, { "Year": 2006, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "101" }, { "Year": 2007, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "139" }, { "Year": 2008, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "134" }, { "Year": 2009, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "150" }, { "Year": 2010, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "200" }, { "Year": 2011, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "284" }, { "Year": 2012, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "296" }, { "Year": 2013, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "329" }, { "Year": 2014, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "356" }, { "Year": 2015, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "361" }, { "Year": 2016, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "421" }, { "Year": 2017, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "484" }, { "Year": 2018, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "515" }, { "Year": 2019, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "565" }, { "Year": 2020, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "584" }, { "Year": 2021, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "783" }, { "Year": 2022, "Class": "Reptiles", "Metric": "Endangered", "Number of Species": "787" }, { "Year": 2002, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "453" }, { "Year": 2003, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "473" }, { "Year": 2004, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "499" }, { "Year": 2006, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "664" }, { "Year": 2007, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "1,385" }, { "Year": 2008, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "1,385" }, { "Year": 2009, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "1,677" }, { "Year": 2010, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "2,806" }, { "Year": 2011, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "3,336" }, { "Year": 2012, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "3,755" }, { "Year": 2013, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "4,204" }, { "Year": 2014, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "4,414" }, { "Year": 2015, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "4,669" }, { "Year": 2016, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "5,338" }, { "Year": 2017, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "6,278" }, { "Year": 2018, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "7,127" }, { "Year": 2019, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "7,829" }, { "Year": 2020, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "8,492" }, { "Year": 2021, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "10,148" }, { "Year": 2022, "Class": "Reptiles", "Metric": "Total Assessed", "Number of Species": "10,150" }, { "Year": 2002, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "293" }, { "Year": 2003, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "293" }, { "Year": 2004, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "304" }, { "Year": 2006, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "341" }, { "Year": 2007, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "422" }, { "Year": 2008, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "423" }, { "Year": 2009, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "469" }, { "Year": 2010, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "594" }, { "Year": 2011, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "772" }, { "Year": 2012, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "807" }, { "Year": 2013, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "879" }, { "Year": 2014, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "927" }, { "Year": 2015, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "944" }, { "Year": 2016, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1079" }, { "Year": 2017, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1215" }, { "Year": 2018, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1307" }, { "Year": 2019, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1409" }, { "Year": 2020, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1449" }, { "Year": 2021, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1839" }, { "Year": 2022, "Class": "Reptiles", "Metric": "Total Threatened", "Number of Species": "1845" }, { "Year": 2002, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "159" }, { "Year": 2003, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "158" }, { "Year": 2004, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "161" }, { "Year": 2006, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "167" }, { "Year": 2007, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "204" }, { "Year": 2008, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "203" }, { "Year": 2009, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "226" }, { "Year": 2010, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "288" }, { "Year": 2011, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "351" }, { "Year": 2012, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "367" }, { "Year": 2013, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "386" }, { "Year": 2014, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "397" }, { "Year": 2015, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "403" }, { "Year": 2016, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "421" }, { "Year": 2017, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "465" }, { "Year": 2018, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "505" }, { "Year": 2019, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "535" }, { "Year": 2020, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "541" }, { "Year": 2021, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "623" }, { "Year": 2022, "Class": "Reptiles", "Metric": "Vulnerable", "Number of Species": "625" }
+        ];
+
+        // Extract unique classes for dropdown
+        const classes = Array.from(new Set(rawData.map(item => item.Class)));
+        const classSelector = document.getElementById('classSelector');
+        classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls;
+            option.textContent = cls;
+            classSelector.appendChild(option);
+        });
+
+        // Event listener for dropdown changes
+        classSelector.addEventListener('change', function () {
+            updateChart(this.value);
+        });
+
+        // Initial chart with first class
+        let lineChart;
+        updateChart(classes[0]);
+
+        function updateChart(selectedClass) {
+            const filteredData = rawData.filter(item => item.Class === selectedClass);
+            const processedData = processData(filteredData);
+
+            if (lineChart) {
+                lineChart.destroy();
+            }
+
+            var ctx = document.getElementById('lineChart').getContext('2d');
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: processedData.years,
+                    datasets: processedData.datasets
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                min: 0,
+                                stepSize: 500,
+                                max: 20000,
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function processData(data) {
+            const years = Array.from(new Set(data.map(item => item.Year))).sort();
+            const metrics = Array.from(new Set(data.map(item => item.Metric)));
+
+            const datasets = metrics.map(metric => {
+                const metricData = years.map(year => {
+                    const entry = data.find(item => item.Year === year && item.Metric === metric);
+                    return entry ? parseInt(entry["Number of Species"].replace(/,/g, '')) : null;
+                });
+
+                return {
+                    label: metric,
+                    data: metricData,
+                };
+            });
+
+            return { years, datasets };
+        }
+
+    </script>
+</body>
+</html>
